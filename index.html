@@ -11,7 +11,10 @@
   <!-- Rode topbalk -->
   <div class="flex items-center justify-between bg-red-600 text-white px-4 py-3">
     <button class="text-sm">&larr; Terug</button>
-    <div class="font-semibold" id="titleScore">California<br><span id="score" class="text-sm">2-havo/vwo</span></div>
+    <div class="font-semibold text-center">
+      California<br>
+      <span id="score" class="text-sm">2-havo/vwo</span>
+    </div>
     <div class="flex items-center gap-2">
       <div class="w-8 h-8 rounded-full bg-gray-700"></div>
       <span class="hidden sm:block text-sm">Max van den Acker</span>
@@ -19,41 +22,44 @@
   </div>
 
   <!-- Hoofdcontent -->
-  <div class="p-6">
-    <!-- Blok met opdracht -->
-    <div class="bg-cyan-100 rounded-lg p-6 shadow text-left">
-      <h2 class="text-gray-700 text-lg font-medium">§ 1.2 Listening</h2>
-      <p class="text-2xl font-bold mt-2">Opdracht 1</p>
-      <button id="clickButton" class="mt-6 bg-cyan-700 hover:bg-cyan-800 text-white px-6 py-2 rounded-lg shadow">
-        Doorgaan
-      </button>
-    </div>
+  <div class="p-6 flex gap-6">
+    <!-- Linker gedeelte -->
+    <div class="flex-1">
+      <!-- Blok met opdracht -->
+      <div class="bg-cyan-100 rounded-lg p-6 shadow text-left">
+        <h2 class="text-gray-700 text-lg font-medium">§ 1.2 Listening</h2>
+        <p class="text-2xl font-bold mt-2">Opdracht 1</p>
+        <button id="clickButton" class="mt-6 bg-cyan-700 hover:bg-cyan-800 text-white px-6 py-2 rounded-lg shadow">
+          Doorgaan
+        </button>
+      </div>
 
-    <!-- Inhoud unit -->
-    <div class="mt-6">
-      <h3 class="text-xl font-bold mb-2">Inhoud unit</h3>
-      <div class="divide-y border rounded-lg">
-        <div class="flex justify-between items-center px-4 py-2">
-          <span>§ 1.1 Crossing borders</span>
-          <button>&rarr;</button>
-        </div>
-        <div class="flex justify-between items-center px-4 py-2 bg-gray-50">
-          <span>§ 1.2 Listening</span>
-          <button>&rarr;</button>
-        </div>
-        <div class="flex justify-between items-center px-4 py-2">
-          <span>§ 1.3 Speaking</span>
-          <button>&rarr;</button>
-        </div>
-        <div class="flex justify-between items-center px-4 py-2">
-          <span>§ 1.4 Reading</span>
-          <button>&rarr;</button>
+      <!-- Inhoud unit -->
+      <div class="mt-6">
+        <h3 class="text-xl font-bold mb-2">Inhoud unit</h3>
+        <div class="divide-y border rounded-lg">
+          <div class="flex justify-between items-center px-4 py-2">
+            <button id="autoClickerBtn" class="flex-1 text-left">§ 1.1 Crossing borders</button>
+            <span id="autoClickerPrice" class="ml-4">Prijs: 50</span>
+          </div>
+          <div class="flex justify-between items-center px-4 py-2 bg-gray-50">
+            <button id="multiplierBtn" class="flex-1 text-left">§ 1.2 Listening</button>
+            <span id="multiplierPrice" class="ml-4">Prijs: 100</span>
+          </div>
+          <div class="flex justify-between items-center px-4 py-2">
+            <span>§ 1.3 Speaking</span>
+            <button>&rarr;</button>
+          </div>
+          <div class="flex justify-between items-center px-4 py-2">
+            <span>§ 1.4 Reading</span>
+            <button>&rarr;</button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Versterk jezelf blok -->
-    <div class="mt-6 bg-gray-800 text-white rounded-lg p-4">
+    <!-- Rechter gedeelte: Versterk jezelf -->
+    <div class="w-64 bg-gray-800 text-white rounded-lg p-4">
       <h4 class="font-bold mb-2">Versterk Jezelf</h4>
       <p class="text-sm mb-2">Onderwerpen bij deze unit</p>
       <div class="bg-white text-black rounded p-2 mb-2">
@@ -76,14 +82,63 @@
   </div>
 
   <script>
-    let count = 2;
-    const scoreDisplay = document.getElementById("score");
-    const button = document.getElementById("clickButton");
+    // Variabelen
+    let score = 2;
+    let clickValue = 1; // hoeveel punten per klik
+    let autoClickers = 0; // hoeveel autoclickers actief
+    let autoClickerPrice = 50;
+    let multiplierPrice = 100;
 
-    button.addEventListener("click", () => {
-      count++;
-      scoreDisplay.textContent = `${count}-havo/vwo`;
+    const scoreDisplay = document.getElementById("score");
+    const clickButton = document.getElementById("clickButton");
+    const autoClickerBtn = document.getElementById("autoClickerBtn");
+    const autoClickerPriceDisplay = document.getElementById("autoClickerPrice");
+    const multiplierBtn = document.getElementById("multiplierBtn");
+    const multiplierPriceDisplay = document.getElementById("multiplierPrice");
+
+    // Functie om score te updaten
+    function updateScore() {
+      scoreDisplay.textContent = `${score}-havo/vwo`;
+    }
+
+    // Click button
+    clickButton.addEventListener("click", () => {
+      score += clickValue;
+      updateScore();
     });
+
+    // Autoclicker kopen
+    autoClickerBtn.addEventListener("click", () => {
+      if (score >= autoClickerPrice) {
+        score -= autoClickerPrice;
+        autoClickers++;
+        autoClickerPrice *= 2; // prijs verdubbelt
+        autoClickerPriceDisplay.textContent = `Prijs: ${autoClickerPrice}`;
+        updateScore();
+      }
+    });
+
+    // Multiplier kopen
+    multiplierBtn.addEventListener("click", () => {
+      if (score >= multiplierPrice) {
+        score -= multiplierPrice;
+        clickValue *= 2; // clicks worden dubbel zoveel waard
+        multiplierPrice *= 2; // prijs verdubbelt
+        multiplierPriceDisplay.textContent = `Prijs: ${multiplierPrice}`;
+        updateScore();
+      }
+    });
+
+    // Interval voor autoclickers
+    setInterval(() => {
+      if (autoClickers > 0) {
+        score += autoClickers; // elke autoclicker = +1 per seconde
+        updateScore();
+      }
+    }, 1000);
+
+    // Initialiseer
+    updateScore();
   </script>
 </body>
 </html>
